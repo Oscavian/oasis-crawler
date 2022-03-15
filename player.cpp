@@ -11,6 +11,10 @@ Player::Player(int startHealth) {
     this->m_enemiesMet = 0;
     this->m_relicsFound = 0;
     this->m_takenDmg = 0;
+    this->m_hasRaft = false;
+    this->m_hasLightArrows = false;
+    this->m_hasBombs = false;
+    this->m_hasHookshot = false;
 }
 
 int Player::getCurrentHealth() const {
@@ -39,17 +43,14 @@ int Player::getX() const {
 
 void Player::restoreHP(int hp) {
     this->m_currentHealth += hp;
-    std::cout << "\nYou restored " << hp << "HP!\n";
 }
 
-void Player::takeDamage(int dmgAmount, bool isEnemy) {
+void Player::takeDamage(int dmgAmount) {
     if (this->m_currentHealth - dmgAmount <= 0){
         this->m_currentHealth = 0;
-        std::cout << "\nYou died!\n";
 
     } else {
         this->m_currentHealth -= dmgAmount;
-        std::cout << "\nYou lost " << dmgAmount << "HP!\n";
     }
 }
 
@@ -57,3 +58,88 @@ void Player::findRelic() {
     this->m_relicsFound++;
 }
 
+bool Player::hasItem(enum itemType item) const {
+    switch (item) {
+        case bombs:
+            if (m_hasBombs){
+                return true;
+            }
+            break;
+        case hookshot:
+            if (m_hasHookshot){
+                return true;
+            }
+            break;
+        case light_arrows:
+            if (m_hasLightArrows){
+                return true;
+            }
+            break;
+        case raft:
+            if (m_hasRaft){
+                return true;
+            }
+            break;
+        default:
+            return false;
+    }
+
+    return false;
+}
+
+void Player::giveItem(enum itemType item){
+    switch (item) {
+        case bombs:
+            m_hasBombs = true;
+            break;
+        case hookshot:
+            m_hasHookshot = true;
+            break;
+        case light_arrows:
+            m_hasLightArrows = true;
+            break;
+        case raft:
+            m_hasRaft = true;
+            break;
+    }
+}
+
+std::string Player::getItemList() const {
+    std::string list;
+    if (hasItem(bombs)){
+        list.append("Bombs, ");
+    }
+    if (hasItem(light_arrows)){
+        list.append("Light Arrows, ");
+    }
+    if (hasItem(raft)) {
+        list.append("Raft, ");
+    }
+    if (hasItem(hookshot)) {
+        list.append("Hookshot, ");
+    }
+    return list;
+}
+
+void Player::useItem(enum itemType item) {
+    switch (item) {
+        case bombs:
+            m_hasBombs = false;
+            break;
+        case hookshot:
+            m_hasHookshot = false;
+            break;
+        case light_arrows:
+            m_hasLightArrows = false;
+            break;
+        case raft:
+            m_hasRaft = false;
+            break;
+    }
+}
+
+void Player::setCurrentHealth(int health) {
+    if (health >= 0){
+        m_currentHealth = health;
+    }
+}

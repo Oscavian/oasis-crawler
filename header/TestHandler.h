@@ -10,5 +10,4 @@ class TestHandler {
 
 };
 
-
 #endif //CRAWLERKLASSEN_TESTHANDLER_H

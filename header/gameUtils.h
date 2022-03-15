@@ -34,4 +34,11 @@ enum inputType {
     movement, dice, yesorno
 };
 
+enum itemType {
+    hookshot, bombs, light_arrows, raft
+};
+
+enum dangerType {
+    rock, ravine, lake
+};
 #endif //CRAWLERKLASSEN_GAMEUTILS_H

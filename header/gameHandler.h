@@ -13,10 +13,8 @@ public:
     gameHandler();
     ~gameHandler();
     void startGame();
-    char getInput(enum inputType);
 private:
     World* hyrule;
 };
-
 
 #endif //CRAWLERKLASSEN_GAMEHANDLER_H

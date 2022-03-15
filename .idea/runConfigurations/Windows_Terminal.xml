@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Windows Terminal" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="/c &quot;start cmd.exe @cmd /k &quot;oasis-crawler.exe&quot;&quot;" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$CMakeCurrentBuildDir$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CrawlerKlassen" TARGET_NAME="oasis-crawler" CONFIG_NAME="Debug" RUN_PATH="$PROJECT_DIR$/../../../../WINDOWS/system32/cmd.exe">
+  <configuration default="false" name="Windows Terminal" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="/c &quot;start cmd.exe @cmd /k &quot;oasis-crawler.exe&quot;&quot;" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$CMakeCurrentBuildDir$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="oasis-crawler" TARGET_NAME="oasis-crawler" CONFIG_NAME="Debug" RUN_PATH="$PROJECT_DIR$/../../../../WINDOWS/system32/cmd.exe">
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
     </method>
