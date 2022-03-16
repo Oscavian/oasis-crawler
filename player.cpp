@@ -8,11 +8,8 @@
 
 Player::Player(int startHealth) {
     this->m_currentHealth = startHealth;
-    this->m_enemiesMet = 0;
     this->m_relicsFound = 0;
-    this->m_takenDmg = 0;
     this->m_hasRaft = false;
-    this->m_hasLightArrows = false;
     this->m_hasBombs = false;
     this->m_hasHookshot = false;
 }
@@ -70,11 +67,6 @@ bool Player::hasItem(enum itemType item) const {
                 return true;
             }
             break;
-        case light_arrows:
-            if (m_hasLightArrows){
-                return true;
-            }
-            break;
         case raft:
             if (m_hasRaft){
                 return true;
@@ -95,9 +87,6 @@ void Player::giveItem(enum itemType item){
         case hookshot:
             m_hasHookshot = true;
             break;
-        case light_arrows:
-            m_hasLightArrows = true;
-            break;
         case raft:
             m_hasRaft = true;
             break;
@@ -108,9 +97,6 @@ std::string Player::getItemList() const {
     std::string list;
     if (hasItem(bombs)){
         list.append("Bombs, ");
-    }
-    if (hasItem(light_arrows)){
-        list.append("Light Arrows, ");
     }
     if (hasItem(raft)) {
         list.append("Raft, ");
@@ -129,11 +115,10 @@ void Player::useItem(enum itemType item) {
         case hookshot:
             m_hasHookshot = false;
             break;
-        case light_arrows:
-            m_hasLightArrows = false;
-            break;
         case raft:
             m_hasRaft = false;
+            break;
+        default:
             break;
     }
 }

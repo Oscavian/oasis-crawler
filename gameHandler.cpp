@@ -10,9 +10,11 @@
 #include "header/gameUtils.h"
 #include "header/world.h"
 #include "header/player.h"
+#include "assert.h"
 
 gameHandler::gameHandler() {
-    hyrule = new World();
+    hyrule = nullptr;
+    m_currentLevel = 1;
 }
 
 gameHandler::~gameHandler(){
@@ -22,20 +24,34 @@ gameHandler::~gameHandler(){
         std::cout << "You died! Game over.";
     }
    delete hyrule;
-};
+}
 
 void gameHandler::startGame() {
     char input = '\0';
-    hyrule->drawWorld();
-    do {
-        input = hyrule->getInput(movement);
-        hyrule->movePlayerIfPossible(input);
-#if defined(_WIN32)
-        system("cls");
-#elif defined(__linux__)
-        //system("clear");
-#endif
-        hyrule->doCellAction();
+    for (int i = 10; i <= 50; i += 5){
+        hyrule = new World(i, m_currentLevel);
         hyrule->drawWorld();
-    } while (hyrule->player->getCurrentHealth() > 0 && hyrule->player->getFoundRelics() < hyrule->getRelicCount());
+        do {
+            input = World::getInput(movement);
+            hyrule->movePlayerIfPossible(input);
+            World::clearScreen();
+            hyrule->doCellAction();
+            hyrule->drawWorld();
+        } while (hyrule->player->getCurrentHealth() > 0 && hyrule->player->getFoundRelics() < hyrule->getRelicCount());
+        m_currentLevel++;
+        if (m_currentLevel != 10){
+            std::cout << "\nLevel cleared!\nContinue playing? (y/n)\n";
+            if (World::getInput(yesorno) == 'n'){
+                std::cout << "Game aborted. Thank you for playing!\n";
+                delete hyrule;
+                break;
+            }
+        } else {
+            std::cout << "Thank you so much for playing my game <3\n";
+        }
+        World::clearScreen();
+        assert("Player not deleted: " && hyrule->player != nullptr);
+        delete hyrule;
+    }
+    assert("World not deleted:" && hyrule != nullptr);
 }

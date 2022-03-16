@@ -4,17 +4,13 @@
 
 #ifndef CRAWLERKLASSEN_PLAYER_H
 #define CRAWLERKLASSEN_PLAYER_H
-
-#include <vector>
 #include "gameUtils.h"
 #include <iostream>
 class World;
-class TestHandler;
 
 class Player {
 public:
-    friend class TestHandler;
-    Player(int startHealth);
+    explicit Player(int startHealth);
     int getCurrentHealth() const;
     void takeDamage(int dmgAmount);
     void restoreHP(int hp);
@@ -32,15 +28,11 @@ public:
 
 private:
     int m_currentHealth;
-    int m_takenDmg;
     int m_relicsFound;
-    int m_enemiesMet;
     Coords m_coords;
     bool m_hasBombs;
     bool m_hasHookshot;
-    bool m_hasLightArrows;
     bool m_hasRaft;
 };
-
 
 #endif //CRAWLERKLASSEN_PLAYER_H

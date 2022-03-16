@@ -10,18 +10,16 @@
 #include "iostream"
 
 class World {
-    //header player, enemies, etc. to call movement methods
+
 public:
-    World(); //TODO: add initial field size as argument
-    //TODO: Gefahrenfeld als Elternklasse und versch. Arten als Children
+    World(unsigned int sideLength, unsigned int level);
     virtual ~World();
-    char getInput(enum inputType inputType);
+    static char getInput(enum inputType inputType);
     Player *player;
-    //revealCells() TODO: fog of war, reveal flag oder so
     void drawWorld();
-    void movePlayer(Coords validCoords);
-    static bool positionIsValid(Coords coords);
-    bool movePlayerIfPossible(char direction);
+    void movePlayer(Coords validCoords) const;
+    bool positionIsValid(Coords coords) const;
+    bool movePlayerIfPossible(char direction) const;
     int getRelicCount() const;
     void doCellAction();
     void encounterDanger();
@@ -33,14 +31,14 @@ public:
     void giveRndItem();
     static int rollDice(int maxEyes);
     void redrawWorld(); // draw + clear
-    void clearScreen();
-
+    static void clearScreen();
 
 private:
+    unsigned int m_worldSize;
     int m_relicCount;
-    enum cellType m_cells[10][10];
+    enum cellType m_cells[50][50];
     std::string statusMessage;
+    unsigned int m_currentLevel;
 };
-
 
 #endif //CRAWLERKLASSEN_WORLD_H

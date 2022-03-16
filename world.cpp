@@ -8,6 +8,7 @@
 #include <iostream>
 #if defined(_WIN32)
 #include "conio.h"
+#include "assert.h"
 #endif
 #include "header/player.h"
 #include "header/gameUtils.h"
@@ -15,14 +16,21 @@
 #define RED "\033[31m"
 
 
-World::World() {
+World::World(unsigned int sideLength,unsigned int level) {
     srand(time(nullptr));
     m_relicCount = 0;
+    if (sideLength > 50){
+        m_worldSize = 50;
+    } else {
+        m_worldSize = sideLength;
+    }
+    m_currentLevel = level;
     statusMessage = "";
     player = new Player(5);
 
-    for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
+    //init needed cells with values
+    for (int i = 0; i < m_worldSize; ++i) {
+        for (int j = 0; j < m_worldSize; ++j) {
             int randNum = rand() % 10;
 
             if (randNum < 5) {
@@ -38,9 +46,16 @@ World::World() {
         }
     }
 
+    //init remaining array
+    for (unsigned int i = m_worldSize; i < 50; ++i) {
+        for (unsigned int j = m_worldSize; j < 50; ++j) {
+            m_cells[i][j] = unused;
+        }
+    }
+
     //print at least one relic
     if (m_relicCount == 0){
-        m_cells[rand() % 10][rand() % 10] = relic;
+        m_cells[rand() % m_worldSize][rand() % m_worldSize] = relic;
     }
 
 }
@@ -85,7 +100,6 @@ char World::getInput(enum inputType inputType) {
                     inputOkay = false;
                 }
                 break;
-                //TODO: add string input for e.g. playername
             default:
                 std::cout << "\nWrong input!\n";
         }
@@ -97,9 +111,9 @@ char World::getInput(enum inputType inputType) {
 
 void World::drawWorld() {
     using namespace std;
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < m_worldSize; ++i) {
         cout << "{{";
-        for (int j = 0; j < 10; ++j) {
+        for (int j = 0; j < m_worldSize; ++j) {
             if (player->getPosition().coordsMatch(Coords(i, j))){
                 cout << 'H';
             }
@@ -112,18 +126,19 @@ void World::drawWorld() {
             } else if (this->m_cells[i][j] == relic) {
                 cout << '*';
             }
+            cout << " ";
         }
         cout << "}}";
         if (i == 0){
-            cout << "           Level 1";
+            cout << "           Level " << to_string(m_currentLevel);
         } else if (i == 1){
             cout << "           HP: " << player->getCurrentHealth();
         } else if (i == 2) {
-            cout << "           Remaining Relics " << this->getRelicCount() - player->getFoundRelics();
+            cout << "           Remaining Relics: " << this->getRelicCount() - player->getFoundRelics();
         } else if (i == 3) {
             cout << "           Items: " << player->getItemList();
         }
-        cout << endl;
+        cout << "\n";
     }
     cout << endl << this->statusMessage;
 }
@@ -132,19 +147,19 @@ int World::getRelicCount() const {
     return this->m_relicCount;
 }
 
-bool World::positionIsValid(Coords coords) {
-    if (coords.x > 9 || coords.x < 0 || coords.y > 9 || coords.y < 0){
+bool World::positionIsValid(Coords coords) const {
+    if (coords.x > m_worldSize - 1 || coords.x < 0 || coords.y > m_worldSize - 1 || coords.y < 0){
         return false;
     } else {
         return true;
     }
 }
 
-void World::movePlayer(Coords validCoords) {
+void World::movePlayer(Coords validCoords) const {
     player->setPosition(validCoords);
 }
 
-bool World::movePlayerIfPossible(char direction) {
+bool World::movePlayerIfPossible(char direction) const {
     if (!positionIsValid(player->getPosition())){
         return false;
     }
@@ -175,7 +190,6 @@ bool World::movePlayerIfPossible(char direction) {
 }
 
 void World::doCellAction() {
-
     enum cellType currentCell = this->m_cells[player->getX()][player->getY()];
     this->statusMessage = "";
     std::string message;
@@ -193,6 +207,9 @@ void World::doCellAction() {
         case heal:
             encounterFairyFountain();
             giveRndItem();
+            break;
+        case unused:
+            assert("Error: Player on unused cell" && currentCell == unused);
             break;
         default:
             break;
@@ -218,7 +235,7 @@ int World::rollDice(int maxEyes){
 }
 
 void World::giveRndItem() {
-    int coinflip = rand() % 1;
+    int coinflip = rand() % 2;
     int itemChance = rand() % 3;
     if (coinflip){
         if (itemChance == 0){
@@ -231,12 +248,7 @@ void World::giveRndItem() {
                 player->giveItem(hookshot);
                 this->statusMessage.append("Item obtained: Hookshot\n");
             }
-        } else if (itemChance == 2){
-            if (!player->hasItem(light_arrows)){
-                player->giveItem(light_arrows);
-                this->statusMessage.append("Item obtained: Light Arrows\n");
-            }
-        } else if(itemChance == 3){
+        } else if(itemChance == 2){
             if (!player->hasItem(raft)){
                 player->giveItem(raft);
                 this->statusMessage.append("Item obtained: Raft\n");
@@ -270,6 +282,8 @@ void World::encounterDanger() {
         case lake:
             encounterLake();
             break;
+        default:
+            break;
     }
 }
 
@@ -282,6 +296,7 @@ void World::encounterRock() {
         if (getInput(yesorno) == 'y'){
             this->statusMessage.append("Boom! The obstacle has been destroyed.\n");
             player->useItem(bombs);
+            clearScreen();
             return;
         }
     }
@@ -292,7 +307,7 @@ void World::encounterRock() {
     damage = rollDice(3);
     player->takeDamage(damage);
     this->statusMessage.append("Oof, that was exhausting. You lost " + std::to_string(damage) + " HP.\n");
-    this->clearScreen();
+    clearScreen();
 }
 
 void World::encounterRavine() {
@@ -304,6 +319,7 @@ void World::encounterRavine() {
         if (getInput(yesorno) == 'y'){
             player->useItem(hookshot);
             this->statusMessage.append("The hookshot brought you safely over the ravine.\n");
+            clearScreen();
             return;
         }
     }
@@ -315,11 +331,11 @@ void World::encounterRavine() {
     if (damage == 10) {
         player->setCurrentHealth(0);
         this->statusMessage.append("Ahhhhhh, you fell!!\n");
-        this->clearScreen();
+        clearScreen();
     } else {
         this->statusMessage.append("Pheww, this was close. You lost 1 HP from the impact.");
         player->takeDamage(1);
-        this->clearScreen();
+        clearScreen();
     }
 }
 
@@ -332,6 +348,7 @@ void World::encounterLake() {
         if (getInput(yesorno) == 'y'){
             player->useItem(raft);
             this->statusMessage.append("The raft brought you over the lake - then it broke. F.\n");
+            clearScreen();
             return;
         }
     }
@@ -342,5 +359,5 @@ void World::encounterLake() {
     damage = rollDice(4);
     player->takeDamage(damage);
     this->statusMessage.append("Oof, you made it. Did you bring a towel?\nYou lost " + std::to_string(damage) + " HP.\n");
-    this->clearScreen();
+    clearScreen();
 }

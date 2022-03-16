@@ -15,7 +15,7 @@ public:
         this->x = x;
         this->y = y;
     };
-    bool coordsMatch(Coords c){
+    bool coordsMatch(Coords c) const{
         if (this->x == c.x && this->y == c.y){
             return true;
         } else {
@@ -27,7 +27,7 @@ public:
 };
 
 enum cellType {
-    normal, danger, heal, relic
+    normal, danger, heal, relic, unused
 };
 
 enum inputType {
@@ -35,7 +35,7 @@ enum inputType {
 };
 
 enum itemType {
-    hookshot, bombs, light_arrows, raft
+    hookshot, bombs, raft
 };
 
 enum dangerType {

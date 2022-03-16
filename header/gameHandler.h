@@ -15,6 +15,7 @@ public:
     void startGame();
 private:
     World* hyrule;
+    unsigned int m_currentLevel;
 };
 
 #endif //CRAWLERKLASSEN_GAMEHANDLER_H

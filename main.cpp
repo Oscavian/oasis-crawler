@@ -4,8 +4,9 @@
 
 int main() {
     using namespace std;
-    cout << "Welcome to the Game!\n Goal: Help Link find all the relics and don't die.\n You (H) start with 5 HP.\n Don't get caught by Ganon or Zanto, they're after you!\n"
-         << "Move the character with w,a,s,d\n";
+    cout << "Welcome to the oasis-crawler!\n Goal: Help Link find all the relics and don't die.\n You (H) start with 5 HP.\nEach level the field size increases! There are 10 levels.\n"
+         << "Move the character with w,a,s,d\n"
+         << " '~' are normal cells\n '!' are dangers\n '$' are fairy fountains\n '*' are relics\n";
     gameHandler game = gameHandler();
 #if defined(_WIN32)
     system("pause");
