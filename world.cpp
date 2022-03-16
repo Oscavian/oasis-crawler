@@ -3,8 +3,8 @@
 //
 
 #include "header/world.h"
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #if defined(_WIN32)
 #include "conio.h"
@@ -13,6 +13,7 @@
 #include "header/player.h"
 #include "header/gameUtils.h"
 #include "header/gameHandler.h"
+#include <cassert>
 #define RED "\033[31m"
 
 
@@ -266,7 +267,7 @@ void World::clearScreen() {
 #if defined(_WIN32)
     system("cls");
 #elif defined(__linux__)
-    //system("clear");
+    system("clear");
 #endif
 }
 

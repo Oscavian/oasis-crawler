@@ -10,7 +10,7 @@
 #include "header/gameUtils.h"
 #include "header/world.h"
 #include "header/player.h"
-#include "assert.h"
+#include <cassert>
 
 gameHandler::gameHandler() {
     hyrule = nullptr;
